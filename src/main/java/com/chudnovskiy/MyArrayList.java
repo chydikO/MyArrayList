@@ -1,6 +1,7 @@
 package com.chudnovskiy;
 
 import java.sql.Struct;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MyArrayList<T> {
@@ -218,12 +219,11 @@ public class MyArrayList<T> {
     места.
     */
     public void remove(int index) {
-        for (int i = index; i< capacity; i++)
-            data[i] = data[i+1];
-        data[capacity] = null;
-        capacity--;
-        if (data.length > INIT_SIZE && capacity < data.length / CUT_RATE)
-            resize(data.length/2); // если элементов в CUT_RATE раз меньше чем
-        // длина массива, то уменьшу в два раза
+        System.arraycopy(data, index + 1, data, index, capacity - index - 1);
+        size--;
+
+        if (data.length > INIT_SIZE && capacity < data.length / CUT_RATE) {
+            resize(data.length / 2);
+        }
     }
 }
