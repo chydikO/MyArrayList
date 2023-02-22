@@ -5,6 +5,10 @@ public class App {
         MyArrayList<Integer> myArrayList1 = new MyArrayList<>();
         MyArrayList<Integer> myArrayList2 = new MyArrayList<>(20);
 
+
+        myArrayList1.pushBack(10);
+        myArrayList1.insert(5, 5);
+        myArrayList1.pushFront(11);
         System.out.println();
     }
 }
