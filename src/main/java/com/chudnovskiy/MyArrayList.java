@@ -228,9 +228,8 @@ public class MyArrayList<T> implements Iterable<T> {
 
         }
         stringBuilderData.delete(stringBuilderData.length() - delimiterString.length(), stringBuilderData.length());
-        return stringBuilderHead.toString() + "\n" + stringBuilderData.toString();
+        return stringBuilderHead.append((System.getProperty("line.separator"))).append(stringBuilderData).toString();
     }
-
     @Override
     public Iterator<T> iterator() {
         return new Iterator() {
