@@ -215,7 +215,20 @@ public class MyArrayList<T> implements Iterable<T> {
      */
     @Override
     public String toString() {
-        return Arrays.toString(data);
+        final String delimiterString = ",\t";
+        int index = 0;
+        StringBuilder stringBuilderHead = new StringBuilder().append("Index:\t");
+        StringBuilder stringBuilderData = new StringBuilder().append("Data:\t");
+        Iterator<T> iterator = this.iterator();
+
+        while (iterator.hasNext()) {
+            stringBuilderHead.append(index).append("\t");
+            stringBuilderData.append(iterator.next()).append(delimiterString);
+            index++;
+
+        }
+        stringBuilderData.delete(stringBuilderData.length() - delimiterString.length(), stringBuilderData.length());
+        return stringBuilderHead.toString() + "\n" + stringBuilderData.toString();
     }
 
     @Override

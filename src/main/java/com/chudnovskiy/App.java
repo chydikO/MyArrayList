@@ -16,11 +16,11 @@ public class App {
             myArrayList1.pushFront(i + 30);
         }
 
-
-        Iterator<Integer> iterator = myArrayList1.iterator();
+        System.out.println(myArrayList1);
+/*        Iterator<Integer> iterator = myArrayList1.iterator();
         while (iterator.hasNext()) {
             System.out.println(iterator.next());
-        }
+        }*/
 
         myArrayList1.remove(6);
         System.out.println();
