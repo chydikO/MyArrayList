@@ -3,8 +3,9 @@ package com.chudnovskiy;
 import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
-public class MyArrayList<T> {
+public class MyArrayList<T> implements Iterable<T> {
     private final int INIT_SIZE = 10;
     private final float CUT_RATE = 1.5f;
     private Object[] data;
@@ -51,21 +52,23 @@ public class MyArrayList<T> {
     private void ensureCapacity(int capacity) {
         if (capacity + size > this.capacity) {
              //Если значение параметра меньше текущего capacity, то ничего не происходит.
-            resize(capacity);
+            resize();
         }
          //Если значение параметра больше текущего capacity, то массив пересоздается
     }
 
     /**
      * Вспомогательный метод для масштабирования, памяти выделяется в 1,5 раза + 1 элемент больше
-     * @param capacity - новый размер коллекции
      */
-    private void resize(int capacity) {
+    private void resize() {
         int newCapacity = Math.round((float) this.capacity * CUT_RATE) + 1;
         Object[] newArray = new Object[newCapacity];
         System.arraycopy(data, 0, newArray, 0, this.capacity);
         data = newArray;
         this.capacity = newCapacity;
+        //перенести индекс конца в конец
+        //перенести последний элемент коллекции в конец конца в конец
+        //endIndexInData =
     }
 
     /**
@@ -77,7 +80,7 @@ public class MyArrayList<T> {
         if (capacity == size) {
             ensureCapacity(1);
         }
-        insert(obj, capacity - 1);
+        insert(obj, size);
     }
 
     /**
@@ -96,8 +99,12 @@ public class MyArrayList<T> {
      */
     public void pushFront(T obj) {
         int currentCapacity = capacity;
-        resize(1);
-        System.arraycopy(data, 0, data, 1, currentCapacity);
+        boolean isResizeDataArray = false;
+        if (capacity == size) {
+            ensureCapacity(1);
+            isResizeDataArray = true;
+        }
+        System.arraycopy(data, 0, data, 1, (!isResizeDataArray) ? currentCapacity - 1 : currentCapacity);
         insert(obj, 0);
     }
 
@@ -109,15 +116,18 @@ public class MyArrayList<T> {
      * @return - результат вставки обьекта
      */
     public boolean insert(T obj, int index) {
-        if (get(index) == null) {
-            if (capacity == size) {
-                ensureCapacity(1);
-            }
-            data[index] = obj;
-            size++;
-            return true;
+        if (index < 0 || index > size ) {
+            System.err.println("Invalid index:\t" + index);
+            return false;
         }
-        return false;
+
+        if (capacity == size) {
+            ensureCapacity(1);
+        }
+
+        data[index] = obj;
+        size++;
+        return true;
     }
 
     /**
@@ -136,10 +146,10 @@ public class MyArrayList<T> {
         data = Arrays.copyOf(data, capacity - 1);
         size--;
 
-        //уменьшение размера массива если индекс меньше чем текущая емкость массива разделенная на 2
-        if (getSize() > INIT_SIZE && index < capacity / 2) {
+        //TODO :уменьшение размера массива если индекс меньше чем текущая емкость массива разделенная на 2
+        /*if (getSize() > INIT_SIZE && index < capacity / 2) {
             resize(capacity / 2);
-        }
+        }*/
         //TODO: refactoring
         /*data[index] = null;
         if (index == 0) {
@@ -155,19 +165,6 @@ public class MyArrayList<T> {
         }*/
 
         return true;
-    }
-
-
-    /**
-     * concat two arrays
-     * @param first
-     * @param second
-     * @return
-     */
-    private T[] concat(T[] first, T[] second) {
-        T[] result = Arrays.copyOf(first, first.length + second.length);
-        System.arraycopy(second, 0, result, first.length, second.length);
-        return result;
     }
 
     /**
@@ -211,19 +208,30 @@ public class MyArrayList<T> {
         return (T) data[index];
     }
 
-    /*
-    Удаляет элемент списка по индексу. Все элементы справа от удаляемого
-    перемещаются на шаг налево. Если после удаления элемента количество
-    элементов стало в CUT_RATE раз меньше чем размер внутреннего массива,
-    то внутренний массив уменьшается в два раза, для экономии занимаемого
-    места.
-    */
-    public void remove(int index) {
-        System.arraycopy(data, index + 1, data, index, capacity - index - 1);
-        size--;
+    /**
+     * переопределить метод toString и реализовать строковое
+     * представление элементов массива через пробел.
+     * @return
+     */
+    @Override
+    public String toString() {
+        return Arrays.toString(data);
+    }
 
-        if (data.length > INIT_SIZE && capacity < data.length / CUT_RATE) {
-            resize(data.length / 2);
-        }
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator() {
+            int i = 0;
+
+            @Override
+            public boolean hasNext() {
+                return i < size;
+            }
+
+            @Override
+            public T next() {
+                return (T) data[i++];
+            }
+        };
     }
 }
