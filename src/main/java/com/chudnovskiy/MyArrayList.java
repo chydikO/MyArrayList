@@ -1,8 +1,7 @@
 package com.chudnovskiy;
 
-import java.sql.Struct;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 
 public class MyArrayList<T> implements Iterable<T> {
@@ -23,6 +22,7 @@ public class MyArrayList<T> implements Iterable<T> {
 
     /**
      * конструктор с заданной емкостью
+     *
      * @param capacity
      */
     public MyArrayList(int capacity) {
@@ -32,6 +32,7 @@ public class MyArrayList<T> implements Iterable<T> {
 
     /**
      * геттер для size
+     *
      * @return Возвращает количество элементов в списке
      */
     public int getSize() {
@@ -47,14 +48,16 @@ public class MyArrayList<T> implements Iterable<T> {
      * ся, памяти выделяется в 1,5 раза + 1 элемент больше.
      * Существующие элементы переносятся в новый массив.
      * Существующие элементы не должны быть потеряны.
+     *
      * @return
      */
     private void ensureCapacity(int capacity) {
         if (capacity + size > this.capacity) {
-             //Если значение параметра меньше текущего capacity, то ничего не происходит.
+            //Если значение параметра больше текущего capacity, то массив пересоздается
             resize();
         }
-         //Если значение параметра больше текущего capacity, то массив пересоздается
+        //Если значение параметра меньше текущего capacity, то ничего не происходит.
+
     }
 
     /**
@@ -86,15 +89,17 @@ public class MyArrayList<T> implements Iterable<T> {
     /**
      * popFront (удаление первого элемента из массива);
      */
-    public boolean popFront() {
-        if (removeAt(0)) {
-            return true;
+    public T popFront() {
+        Object obj;
+        if (size != 0 && ((obj = removeAt(0)) != null)) {
+            return (T) obj;
         }
-        return false;
+        return null;
     }
 
     /**
      * pushFront (добавление нового элемента obj в начало массива)
+     *
      * @param obj
      */
     public void pushFront(T obj) {
@@ -111,20 +116,19 @@ public class MyArrayList<T> implements Iterable<T> {
     /**
      * insert (вставка нового элемента obj в массив по указанному
      * индексу index, с проверкой на выход за пределы массива)
+     *
      * @param obj
      * @param index
      * @return - результат вставки обьекта
      */
     public boolean insert(T obj, int index) {
-        if (index < 0 || index > size ) {
+        if (index < 0 || index > size) {
             System.err.println("Invalid index:\t" + index);
             return false;
         }
-
         if (capacity == size) {
             ensureCapacity(1);
         }
-
         data[index] = obj;
         size++;
         return true;
@@ -133,23 +137,29 @@ public class MyArrayList<T> implements Iterable<T> {
     /**
      * removeAt (удаление одного элемента по указанному индексу index
      * Должна быть проверка на допустимость индекса
+     *
      * @param index
      * @return - результат удаления
      */
-    public boolean removeAt(int index) {
+    public T removeAt(int index) {
         if (index < 0 || index >= capacity) {
-            return false;
+            return null;
         }
-        for (int i = index; i < capacity - 1; i++) {
+        Object obj = get(index);
+        for (int i = index; i < size - 1; i++) {
             data[i] = data[i + 1];
         }
         data = Arrays.copyOf(data, capacity - 1);
         size--;
 
         //TODO :уменьшение размера массива если индекс меньше чем текущая емкость массива разделенная на 2
-        /*if (getSize() > INIT_SIZE && index < capacity / 2) {
-            resize(capacity / 2);
-        }*/
+        int newCapacity;
+        if (size > INIT_SIZE && size < (newCapacity = capacity / 2)) {
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(data, 0, newArray, 0, this.capacity);
+            data = newArray;
+            this.capacity = newCapacity;
+        }
         //TODO: refactoring
         /*data[index] = null;
         if (index == 0) {
@@ -164,43 +174,54 @@ public class MyArrayList<T> implements Iterable<T> {
 
         }*/
 
-        return true;
+        return (T) obj;
     }
 
     /**
      * remove (удаление одного элемента obj, значение которого
      * совпадает со значением переданного параметра)
+     *
      * @param obj
      * @return - результат удаления
      */
-    public boolean remove(T obj) {
-
-            return false;
+    public T remove(T obj) {
+        int index = get(obj);
+        if (obj == null || index == -1) return null;
+        return removeAt(index);
     }
 
     /**
      * removeAll (удаление всех элементов, значения которых
      * совпадает со значением переданного параметра obj)
+     *
      * @param obj
-     * @return - результат удаления
+     * @return - кол-во удаленных обьектов
      */
-    public boolean removeAll(T obj){
-
-        return false;
+    public int removeAll(T obj) {
+        int counter = 0;
+        while (remove(obj) != null) {
+            counter++;
+        }
+        return counter;
     }
 
-
     /**
-     *  Добавляет новый элемент obj в список
+     * Возвращает позицию элемент в списке по индексу index.
+     *
      * @param obj
+     * @return позиция элемента в списка, -1 - обьект не найден
      */
-    private void add(T obj) {
-        size++;
-        data[size] = obj;
+    private int get(T obj) {
+        if (obj == null) return -1;
+        for (int i = 0; i < size - 1; i++) {
+            if (obj.equals(get(i))) return i;
+        }
+        return -1;
     }
 
     /**
      * Возвращает элемент списка по индексу index.
+     *
      * @param index
      * @return элемент списка
      */
@@ -209,8 +230,20 @@ public class MyArrayList<T> implements Iterable<T> {
     }
 
     /**
+     * сlear (обнуление массива – всем элементам массива по
+     * индексам от 0 до size-1 присвоить значение null, полю size
+     * присвоить значение 0).
+     */
+    public void clear() {
+        size = 0;
+        data = new Object[INIT_SIZE];
+        capacity = INIT_SIZE;
+    }
+
+    /**
      * переопределить метод toString и реализовать строковое
      * представление элементов массива через пробел.
+     *
      * @return
      */
     @Override
@@ -230,6 +263,7 @@ public class MyArrayList<T> implements Iterable<T> {
         stringBuilderData.delete(stringBuilderData.length() - delimiterString.length(), stringBuilderData.length());
         return stringBuilderHead.append((System.getProperty("line.separator"))).append(stringBuilderData).toString();
     }
+
     @Override
     public Iterator<T> iterator() {
         return new Iterator() {

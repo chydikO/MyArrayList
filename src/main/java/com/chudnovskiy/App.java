@@ -11,10 +11,17 @@ public class App {
         myArrayList1.pushBack(10);
         myArrayList1.insert(5, 5);
         myArrayList1.pushFront(11);
+        myArrayList1.pushFront(11);
+        myArrayList1.pushFront(11);
         myArrayList1.pushBack(99);
         for (int i = 1; i <= 8; i++) {
             myArrayList1.pushFront(i + 30);
         }
+        System.out.println(myArrayList1);
+
+
+        System.out.println("popFront:\t" + myArrayList1.popFront());
+
 
         System.out.println(myArrayList1);
 /*        Iterator<Integer> iterator = myArrayList1.iterator();
@@ -22,7 +29,13 @@ public class App {
             System.out.println(iterator.next());
         }*/
 
-        myArrayList1.remove(6);
-        System.out.println();
+        System.out.println("remove(10):\t" + myArrayList1.remove(10));
+        System.out.println("remove(3333):\t" + myArrayList1.remove(3333));
+        System.out.println("size:\t" + myArrayList1.getSize());
+        System.out.println("Remove all(11) - count times:\t" + myArrayList1.removeAll(11));
+        System.out.println(myArrayList1);
+        System.out.println("size:\t" + myArrayList1.getSize());
+
+
     }
 }
