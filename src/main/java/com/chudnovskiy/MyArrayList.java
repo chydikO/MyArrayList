@@ -140,15 +140,6 @@ public class MyArrayList<T> implements Iterable<T> {
         T removeObject = (T) data[index];
         System.arraycopy(data, index + 1, data, index, size - index);
         size--;
-
-        //TODO :уменьшение размера массива если индекс меньше чем текущая емкость массива разделенная на 2
-//        int newCapacity;
-//        if (size > INIT_SIZE && size < (newCapacity = capacity / 2)) {
-//            //Object[] newArray = new Object[newCapacity];
-//            System.arraycopy(data, index + 1, data, index, newCapacity - index);
-//            //data = newArray;
-//            this.capacity = newCapacity;
-//        }
         return removeObject;
     }
 
