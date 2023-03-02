@@ -39,6 +39,8 @@ public class App {
         System.out.println(myArrayList1);
         System.out.println("size:\t" + myArrayList1.getSize());
 
+        myArrayList1.clear();
+        System.out.println();
 
     }
 }

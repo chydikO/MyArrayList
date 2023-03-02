@@ -210,9 +210,8 @@ public class MyArrayList<T> implements Iterable<T> {
      * присвоить значение 0).
      */
     public void clear() {
+        Arrays.fill(data, null);
         size = 0;
-        data = new Object[INIT_SIZE];
-        capacity = INIT_SIZE;
     }
 
     /**
