@@ -98,13 +98,9 @@ public class MyArrayList<T> implements Iterable<T> {
      * @param obj - добавляемый обьект
      */
     public void pushFront(T obj) {
-        int currentCapacity = capacity;
-        boolean isResizeDataArray = false;
         if (capacity == size) {
             ensureCapacity(1);
-            isResizeDataArray = true;
         }
-        System.arraycopy(data, 0, data, 1, (!isResizeDataArray) ? currentCapacity - 1 : currentCapacity);
         insert(obj, 0);
     }
 
@@ -124,6 +120,7 @@ public class MyArrayList<T> implements Iterable<T> {
         if (capacity == size) {
             ensureCapacity(1);
         }
+        System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = obj;
         size++;
         return true;
@@ -140,22 +137,19 @@ public class MyArrayList<T> implements Iterable<T> {
         if (index < 0 || index >= capacity) {
             return null;
         }
-        Object obj = get(index);
-        for (int i = index; i < size - 1; i++) {
-            data[i] = data[i + 1];
-        }
-        data = Arrays.copyOf(data, capacity - 1);
+        T removeObject = (T) data[index];
+        System.arraycopy(data, index + 1, data, index, size - index);
         size--;
 
         //TODO :уменьшение размера массива если индекс меньше чем текущая емкость массива разделенная на 2
-        int newCapacity;
-        if (size > INIT_SIZE && size < (newCapacity = capacity / 2)) {
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(data, 0, newArray, 0, this.capacity);
-            data = newArray;
-            this.capacity = newCapacity;
-        }
-        return (T) obj;
+//        int newCapacity;
+//        if (size > INIT_SIZE && size < (newCapacity = capacity / 2)) {
+//            //Object[] newArray = new Object[newCapacity];
+//            System.arraycopy(data, index + 1, data, index, newCapacity - index);
+//            //data = newArray;
+//            this.capacity = newCapacity;
+//        }
+        return removeObject;
     }
 
     /**
