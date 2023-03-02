@@ -24,6 +24,9 @@ public class App {
 
 
         System.out.println(myArrayList1);
+        System.out.println("insert(77,3):\t" + myArrayList1.insert(77  ,3));
+        System.out.println(myArrayList1);
+
 /*        Iterator<Integer> iterator = myArrayList1.iterator();
         while (iterator.hasNext()) {
             System.out.println(iterator.next());

@@ -1,12 +1,10 @@
 package com.chudnovskiy;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Iterator;
 
 public class MyArrayList<T> implements Iterable<T> {
     private final int INIT_SIZE = 10;
-    private final float CUT_RATE = 1.5f;
     private Object[] data;
     private int capacity; //текущая емкость массива
     private int size; // текущее количество существующих элементов в массиве
@@ -48,8 +46,6 @@ public class MyArrayList<T> implements Iterable<T> {
      * ся, памяти выделяется в 1,5 раза + 1 элемент больше.
      * Существующие элементы переносятся в новый массив.
      * Существующие элементы не должны быть потеряны.
-     *
-     * @return
      */
     private void ensureCapacity(int capacity) {
         if (capacity + size > this.capacity) {
@@ -64,14 +60,13 @@ public class MyArrayList<T> implements Iterable<T> {
      * Вспомогательный метод для масштабирования, памяти выделяется в 1,5 раза + 1 элемент больше
      */
     private void resize() {
+        float CUT_RATE = 1.5f;
         int newCapacity = Math.round((float) this.capacity * CUT_RATE) + 1;
         Object[] newArray = new Object[newCapacity];
         System.arraycopy(data, 0, newArray, 0, this.capacity);
         data = newArray;
         this.capacity = newCapacity;
-        //перенести индекс конца в конец
-        //перенести последний элемент коллекции в конец конца в конец
-        //endIndexInData =
+
     }
 
     /**
@@ -100,7 +95,7 @@ public class MyArrayList<T> implements Iterable<T> {
     /**
      * pushFront (добавление нового элемента obj в начало массива)
      *
-     * @param obj
+     * @param obj - добавляемый обьект
      */
     public void pushFront(T obj) {
         int currentCapacity = capacity;
@@ -117,8 +112,8 @@ public class MyArrayList<T> implements Iterable<T> {
      * insert (вставка нового элемента obj в массив по указанному
      * индексу index, с проверкой на выход за пределы массива)
      *
-     * @param obj
-     * @param index
+     * @param obj - добавляемый обьект
+     * @param index - индекс вставки обьекта в MyArrayList
      * @return - результат вставки обьекта
      */
     public boolean insert(T obj, int index) {
@@ -160,20 +155,6 @@ public class MyArrayList<T> implements Iterable<T> {
             data = newArray;
             this.capacity = newCapacity;
         }
-        //TODO: refactoring
-        /*data[index] = null;
-        if (index == 0) {
-            // удалить элемен т с индексом 0
-        } else {
-            Object[] tmpRightData = new Object[capacity - index - 1];
-            System.arraycopy(data, index + 1, tmpRightData, 0, capacity - index - 1);
-
-            Object[] tmpLeftData = new Object[(index - 1) == 0 ? 1 : index];
-            System.arraycopy(data, 0, tmpLeftData, 0, index);
-
-
-        }*/
-
         return (T) obj;
     }
 
