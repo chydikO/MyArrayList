@@ -3,15 +3,19 @@ package com.chudnovskiy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Iterator;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class MyArrayListTest {
     private MyArrayList<Integer> myArrayList1;
+    private Iterator<Integer> iterator;
 
     @BeforeEach
     void setUp() {
         myArrayList1 = new MyArrayList<>();
+        iterator = myArrayList1.iterator();
     }
 
 
@@ -126,5 +130,24 @@ class MyArrayListTest {
         myArrayList1.clear();
         assertEquals(0, myArrayList1.getSize());
         assertEquals(null, myArrayList1.get(0));
+    }
+
+    @Test
+    void iteratorHasNext() {
+        myArrayList1.pushFront(0);
+        myArrayList1.pushFront(1);
+        assertEquals(true, iterator.hasNext());
+        assertEquals(1, iterator.next());
+        assertEquals(0, iterator.next());
+        assertEquals(false, iterator.hasNext());
+        myArrayList1.clear();
+    }
+
+    @Test
+    void iteratorNext() {
+        myArrayList1.pushFront(0);
+        myArrayList1.pushFront(99);
+        assertEquals(99, iterator.next());
+        myArrayList1.clear();
     }
 }

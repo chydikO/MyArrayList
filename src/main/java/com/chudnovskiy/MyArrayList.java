@@ -53,7 +53,6 @@ public class MyArrayList<T> implements Iterable<T> {
             resize();
         }
         //Если значение параметра меньше текущего capacity, то ничего не происходит.
-
     }
 
     /**
@@ -66,7 +65,6 @@ public class MyArrayList<T> implements Iterable<T> {
         System.arraycopy(data, 0, newArray, 0, this.capacity);
         data = newArray;
         this.capacity = newCapacity;
-
     }
 
     /**
